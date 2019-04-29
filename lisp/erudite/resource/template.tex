@@ -1,0 +1,49 @@
+\documentclass[11pt,pdflatex,makeidx]{scrbook}   % Book class in 11 points
+\usepackage[margin=0.5in]{geometry}
+\usepackage{color}
+\usepackage{makeidx}
+\usepackage{hyperref}
+<% if erudite::*latex-highlight-syntax* %>
+\usepackage{minted}
+\usepackage{mdframed}
+<% else %>
+\usepackage{listings}
+<% end %>
+\usepackage{hyperref}
+\usepackage{courier}
+
+\hypersetup{colorlinks=true,linkcolor=blue}
+<% if (not erudite::*latex-highlight-syntax*) %>
+\lstloadlanguages{Lisp}
+\lstset{frame=none,language=Lisp,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{black}\bfseries,
+  stringstyle=\ttfamily,
+  showstringspaces=false,breaklines}
+\lstnewenvironment{code}{}{}
+<% else %>
+% \surroundwithmdframed{minted}
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+<% end %>
+\parindent0pt  \parskip10pt             % make block paragraphs
+\raggedright                            % do not right justify
+% Note that book class by default is formatted to be printed back-to-back.
+\makeindex
+\begin{document}                        % End of preamble, start of text.
+\title{\bf <%= (@ title)%>}
+<% if (@ subtitle) %>
+\subtitle{<%= (@ subtitle)%>}
+<% end %>
+<% if (@ author) %>
+\author{<%= (@ author) %>}
+<% end %>
+\date{\today}                           %   Use current date.
+\frontmatter                            % only in book class (roman page #s)
+\maketitle                              % Print title page.
+\tableofcontents                        % Print table of contents
+\mainmatter                             % only in book class (arabic page #s)
+\long\def\ignore#1{}
+<%= (@ body) %>                             % ignore macro
+\chapter{Index}
+\printindex
+\end{document}
