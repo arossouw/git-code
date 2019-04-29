@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load cms_filters %}
+
+{% block title %}Jobs{% endblock %}
+
+{% block content %}
+{% if jobs %}
+  {% for job in jobs %}
+    {% if job.published or user.is_authenticated and perms.website.administration %}
+      {% if not job.published %}<div class="pagedraft">{% endif %}
+      {% if user.is_authenticated and perms.website.administration %}
+        <p><a class="pageedit" href="{% url admin:cms_post_change object.id %}">Edit post</a></p>
+      {% endif %}
+      {% autoescape off %}
+        <h3><a href="{{ job.get_absolute_url }}">{{ job.title }}</a></h3><p class="byline">{{ job.date_published|date:"F j, Y" }}</p>
+        {% if job.image %}
+            {% thumbnail job.image.image "100"  as im %}
+                <img src="{{ im.url }}" width="100px"  class="flexible float-right">
+            {% endthumbnail %}
+        {% endif %}
+        <p><a href="{{ job.get_absolute_url }}"> Read more </a></p>
+      {% endautoescape %}
+      {% if not job.published %}</div>{% endif %}
+    {% endif %}
+  {% endfor  %}
+{% else %}
+  <p>There are no current jobs listings.</p>
+{% endif %}
+{% endblock %}
+
+{% block sidebar %}
+{% endblock sidebar %}

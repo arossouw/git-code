@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% load staticfiles %}
+{% load cms_filters %}
+
+{% block title %}{% if listing %}{{listing.description}}{% else %}
+Recent discussions
+{# static files are kind of busted with the current media path setup #}
+{# <a href="{% url rssfeed %}"><img src="{% static '/images/feed-icon-28x28.png' %}" alt="rss feed" />Subscribe to RSS feed</a> #}
+<a href="{% url rssfeed %}"><img src="/images/feed-icon-28x28.png" width="14" alt="rss feed" /></a>
+{% endif %}{% endblock %}
+
+{% block content %}
+{% if latest %}
+{% for object in latest %}
+  {% if object.published or user.is_authenticated and perms.website.administration %}
+    <div class="post-list ym-contain-dt">
+    {% if not object.published %}<div class="pagedraft">{% endif %}
+    {% if object.image %}
+        {% thumbnail object.image.image "60"  as im %}
+            <img src="{{ im.url }}" width="60"  class="float-left" alt="{{ object.title }}">
+        {% endthumbnail %}
+    {% endif %}
+    {% if user.is_authenticated and perms.website.administration %}
+      <!--<p><a class="pageedit" href="{% url admin:cms_post_change object.id %}">Edit post</a></p>-->
+    {% endif %}
+    {% autoescape off %}
+      <h3><a href="{{ object.get_absolute_url }}">{% if not object.published %}[DRAFT] {% endif %}{{ object.title }}</a></h3>
+   <p class="byline">
+   {% if object.author %}
+        {% if object.author.is_active %}
+        <a href="{{ object.author.profile.get.get_absolute_url }}">{{ object.author.first_name|capfirst }} {{ object.author.last_name|capfirst }}</a>, 
+        {% else %}
+            {{ object.author.first_name|capfirst }} {{ object.author.last_name|capfirst }},
+        {% endif %}
+    {% endif %}
+    <a href="{{ object.listing.get.get_absolute_url }}">{{ object.listing.description }}</a>,
+      <span>{{ object.date_published|date:"F j, Y" }}</span></p>
+    {% endautoescape %}
+    {% if not object.published %}</div>{% endif %}
+    </div>
+  {% endif %}
+{% endfor %}
+{% else %}
+<p>Sorry - there are no posts available in the "{{listing.description}}" group.<p>
+{% endif %}
+{% endblock %}
+
+{% block sidebar %}
+  {% if twitter %}{{ twitter|twitter_widget|safe }}{% endif %}
+{% endblock sidebar %}

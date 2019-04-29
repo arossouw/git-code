@@ -1,0 +1,84 @@
+.TH tlp\-stat 8 2017-01-29 "TLP 1.0" "Power Management"
+.
+.SH NAME
+tlp\-stat \- show power saving settings
+.
+.SH SYNOPSIS
+.B tlp\-stat \fI[option]\fR "..."
+.
+.SH DESCRIPTION
+Show configuration, system information, active power saving settings and battery
+data.
+.
+.SH OPTIONS
+.
+.TP
+.B \-b, \-\-battery
+Show battery data.
+.
+.TP
+.B \-c, \-\-config
+Show configuration.
+.
+.TP
+.B \-d, \-\-disk
+Show disk data.
+.
+.TP
+.B \-e, \-\-pcie
+Show PCI(e) device data.
+.
+.TP
+.B \-g, \-\-graphics
+Show graphics card data.
+.
+.TP
+.B \-p, \-\-processor
+Show processor data.
+.
+.TP
+.B \-r, \-\-rfkill
+Show radio device data.
+.
+.TP
+.B \-s, \-\-system
+Show system information.
+.
+.TP
+.B \-t, \-\-temp
+Show temperatures and fan speed.
+.
+.TP
+.B \-u, \-\-usb
+Show USB device data.
+.
+.TP
+.B \-w, \-\-warn
+Show warnings.
+.
+.TP
+.B \-P, \-\-pev
+Monitor power supply udev events.
+.
+.TP
+.B \-\-psup
+Show power supply diagnostic.
+.
+.TP
+.B \-T, \-\-trace
+Show trace output.
+.
+.TP
+.B \-v, \-\-verbose
+Be more verbose.
+.
+.SH FILES
+.I /etc/default/tlp
+.RS
+System configuration file containing all power saving settings.
+.
+.SH SEE ALSO
+.BR tlp (8).
+.
+.SH AUTHOR
+(c) 2017 Thomas Koch <linrunner at gmx.net>

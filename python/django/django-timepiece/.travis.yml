@@ -1,0 +1,13 @@
+language: python
+python: "3.5"
+env:
+  - TOXENV=python3.5-django1.9
+  - TOXENV=python2.7-django1.9
+  - TOXENV=python3.5-django1.8
+  - TOXENV=python2.7-django1.8
+install:
+  - pip install -q tox==2.2.1
+before_script:
+  - psql -c 'create database timepiece;' -U postgres
+script:
+  - tox -- --settings=example_project.settings.travis

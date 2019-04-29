@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load markup %}
+{% load thumbnail %}
+{% load profile_filters %}
+
+{% block content %}
+<div class="profile">
+<h2>
+{% if profile.webpage %}<a href="{{ profile.webpage}}">{% endif %}
+{% if profile.title %}{{ profile.title }} {% endif %}{{ profile.user.first_name|capfirst}} {{ profile.user.last_name|capfirst }}
+{% if profile.webpage %}</a>{% endif %}
+</h2>
+{% if profile.user.email and profile.display_email %}
+<a href=mailto:{{ profile.user.email }}>{{ profile.user.email }}</a>
+{% endif %}
+
+{% if profile.institution or profile.country %}<h4>{% endif %}
+{% if profile.institution %}
+{% if profile.institution_website %}<a href="{{ profile.institution_website}}">{% endif %}
+{{ profile.institution }}{% if profile.institution_website %}{% if profile.country %}, {% endif %}</a>{% endif %}
+{% endif %}
+{% if profile.country %}{{ profile.country.name }}{% endif %}
+{% if profile.institution or profile.country %}</h4>{% endif %}
+{% if profile.research %}
+<div class="profile-research">
+{{ profile.research|markdown }}
+</div>
+{% endif %}
+</div>
+{% endblock content %}
+
+{% block leftbar %}
+{% if request.user == profile.user %}
+<div class="ym-button sidebar-button"><a href="/petrel/edit/">Update your profile</a></div>
+<div class="ym-button sidebar-button"><a href="/accounts/password/change/">Change your password</a></div>
+{% endif %}
+{% endblock leftbar %}
+
+{% block sidebar %}
+<div class="profile">
+{% if profile.photograph %}
+{% if profile.photograph.width > 255 %}
+    {% thumbnail profile.photograph "255"  as im %}
+    <img src="{{ im.url }}" width="255"  class="flexible" alt="{{ profile.user.first_name|capfirst }} {{profile.user.last_name|capfirst }}">
+    {% endthumbnail %}
+{% else %}
+    <img src="{{ profile.photograph.url }}" width="{{ profile.photograph.width }}"  class="flexible" alt="{{ profile.user.first_name|capfirst }} {{profile.user.last_name|capfirst }}"></a>
+{% endif %}
+{% endif %}
+{% if profile.seabirds.all %}
+<h4>Seabird families</h4>
+{% for bird in profile.seabirds.all %}
+<span class="badge inactivebadge">{{ bird.choice }}</span>
+{% endfor %}
+{% endif %}
+</div>
+
+
+{% if profile.twitter and profile.display_twitter %}{{ profile.twitter|twitter_widget|safe }}{% endif %}
+
+{% endblock sidebar %}
+
+
