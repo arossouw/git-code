@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% if request.path_info == '/gallery/create' %}Gallery : Add Image{% endif %}
+{% endblock %}
+
+{% block content %}
+<form method="post" action="{{ action }}" class="ym-form ym-columnar" enctype="multipart/form-data">{% csrf_token %}
+    <!--<div class="ym-fbox-button float-right">
+        <input type="submit" name="submit" value="Save" id="submit" class="ym-button">
+    </div>-->
+{% block postblock %}
+{% endblock postblock %}
+{% block imageblock %}
+<div id='image-form'>
+{% for field in imageform %}
+    <div class="{% ifequal field.name 'seabird_families' %}ym-fbox-select{% else %}ym-fbox-text{% endifequal %} {% if field.errors %}ym-error{% endif %}">
+        <strong> {{ field.errors }} </strong>
+        <label for="id_image-{{ field.name }}">{{ field.label }}
+        {% if field.name in required %}<sup title="This field is mandatory.">*</sup>{% endif %}
+        <div class="form-help"> {% autoescape off %}{{ field.help_text }}{% endautoescape %}</div>
+        </label>
+        {% if field.name == 'image' %}<div class="flexible">{% endif %}
+        {{ field }}
+        {% if field.name == 'image' %}</div>{% endif %}
+    </div>
+{% endfor %}
+</div>
+{% endblock imageblock %}
+    <div class="ym-fbox-button">
+        <input type="submit" name="submit" value="Save" id="submit" class="ym-button">
+    </div>
+</form>
+
+{% endblock content %}
+

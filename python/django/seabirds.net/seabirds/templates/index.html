@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load markup %}
+{% load thumbnail %}
+{% load cms_filters %}
+
+{% block content %}
+{% if user.is_authenticated and perms.website.administration %}
+  <p><a class="pageedit" href="{% url admin:cms_page_change page.id %}">Edit page</a></p>
+{% endif %}
+{% if page.published or user.is_authenticated and perms.website.administration %}
+  {% if not page.published %}
+    <div class="pagedraft">
+  {% endif %}
+  {{ page.markdown_text }}
+  {% if not page.published %}
+    </div>
+  {% endif %}
+{% endif %}
+{% endblock content %}
+
+
+{% block leftbar %}
+{% if not user.is_authenticated %}
+<div id="join"><a href="/accounts/register/"><img src="/css/join-us.png" alt="Join us"></a></div>
+{% endif %}
+{% activity_stream user %}
+{% endblock leftbar %}
+
+{% block sidebar %}
+  {{ page.markdown_sidebar }}
+ 
+ {% if seabirders %}
+    <div class="ym-grid">
+    {% for p in seabirders %}
+        <div class="ym-g33 ym-gl">
+        {% thumbnail p.photograph "100x100" crop="center" as im %}
+            <a href="{{ p.get_absolute_url }}" title="{{ p.user.first_name|capfirst }} {{ p.user.last_name|capfirst }}"><img src="{{ im.url }}" width="{{ im.width }}"  class="flexible"></a>
+        {% endthumbnail %}
+        </div>
+    {% endfor %}
+    </div>
+ {% endif %}
+  
+  {% if twitter %} 
+  {{ twitter|twitter_widget|safe }}
+  <a href="http://www.facebook.com/World.Seabird.Union" target="_TOP"><img src="/images/facebook.png" width="100%"></a> 
+{% endif %}
+
+{% endblock sidebar %}
+

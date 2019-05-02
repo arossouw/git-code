@@ -1,0 +1,50 @@
+TLP README - 25.01.2018
+
+TLP brings you the benefits of advanced power management for Linux without the need
+to understand every technical detail. TLP comes with a default configuration already
+optimized for battery life, so you may just install and forget it. Nevertheless TLP
+is highly customizable to fulfil your specific requirements.
+
+TLP is a pure command line tool with automated background tasks. It does not contain a GUI.
+
+Separate settings profiles depending on the power source AC/battery:
+- Kernel laptop mode and dirty buffer params
+- Processor frequency scaling including "turbo boost" / "turbo core"
+- Limit max/min P-state to control power dissipation of the CPU - intel_pstate only
+- HWP energy performance hints
+- Power aware process scheduler for multi-core/hyper-threading
+- Processor performance versus energy savings policy (x86_energy_perf_policy)
+- Hard disk advanced power magement level (APM) and spin down timeout (per disk)
+- AHCI link power management (ALPM) with device blacklist
+- AHCI runtime power management for host controllers and disks *EXPERIMENTAL*
+- PCIe active state power management (PCIe ASPM)
+- Runtime power management for PCI(e) bus devices
+- Radeon graphics power management (KMS and DPM)
+- Wifi power saving mode
+- Enable/disable integrated radio devices (excluding connected devices)
+- Power off optical drive in UltraBay/MediaBay
+- Audio power saving mode
+
+Additional functions:
+- I/O scheduler (per disk)
+- USB autosuspend with device blacklist/whitelist (input devices excluded automatically)
+- Enable or disable integrated radio devices upon system startup and shutdown
+- Restore radio device state on system startup (from previous shutdown)
+- Radio device wizard: switch radios upon network connect/disconnect and dock/undock
+- Disable Wake On LAN
+- Integrated WWAN and bluetooth state is restored after suspend/hibernate
+- Untervolting of Intel processors - requires kernel with PHC-Patch
+- Battery charge thresholds - ThinkPads only
+- Recalibrate battery - ThinkPads only
+
+All TLP settings are stored in /etc/default/tlp. The default configuration
+provides optimized power saving out of the box.
+
+Read the the full documentation at:
+- http://linrunner.de/tlp
+
+Or take a look at the manpages:
+- tlp
+- tlp-stat (display tlp status and active settings)
+- wifi, bluetooth, wwan (switch wireless devices on/off)
+- run-on-ac, run-on-bat

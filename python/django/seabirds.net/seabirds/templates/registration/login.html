@@ -1,0 +1,30 @@
+{% extends "registration/registration_base.html" %}
+{% block login-active %}class="active"{% endblock %}
+{% block title %}Login to Seabirds.net{% endblock %}
+{% block content %}
+
+{% if form.errors %}
+<div class="ym-error"><p><strong>Your username and password didn't match. Please try again.</strong></p></div>
+{% endif %}
+
+<form method="post" action="{% url django.contrib.auth.views.login %}" class="ym-form ym-columnar">{% csrf_token %}
+    <div class="ym-fbox-text">
+        <label for="id_username">Email or username</label>
+        {{ form.username }}
+    </div>
+    <div class="ym-fbox-text">
+        {{ form.password.label_tag }}
+        {{ form.password }}
+    </div>
+<input type="submit" value="login" />
+<input type="hidden" name="next" value="{{ next }}" />
+</form>
+<p>Login using your email address or your username. Your username is usually of the form firstname-lastname.<br> <a href="{% url auth_password_reset %}">Request a new password</a><br><a href="{% url registration_register %}">Register as a seabird researcher</a></p>
+
+{% endblock %}
+
+{% block leftbar %}
+{% if not user.is_authenticated %}
+<div id="join"><a href="/accounts/register/"><img src="/css/join-us.png" alt="Join us"></a></div>
+{% endif %}
+{% endblock leftbar %}

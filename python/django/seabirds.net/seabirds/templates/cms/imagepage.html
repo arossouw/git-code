@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if editform %}
+        <form name='image-options' action={{ action }} method='POST' class='ym-form'>{% csrf_token %}
+        <input type="submit" name="edit" value="Edit" id="edit"></input>
+        </form>
+   {% endif %}
+<h2> {{ image.title }} </h2>
+<a href="{{ image.get_image_url }}">
+<img src="{{ image.get_image_url }}" alt="{{ image.title }}" title="{{ image.title }}" class="flexible">
+</a>
+{% if image.caption %}<p>{{ image.caption }}</p>{% endif %}
+<p> Image copyright {% if image.owner_url %}<a href="{{ image.owner_url}}">{% endif %}{{ image.owner }}.  {% if image.owner_url %}</a>{% endif %}
+{% if image.license %} Licensed for reuse under a <a href="{{ image.license.url }}">creative commons {{ image.license.description|lower }}</a> license. {% endif %}
+{% if image.source_url %}The original image may be viewed <a href="{{ image.source_url }}"> here </a>. {% endif %}
+{% endblock %}

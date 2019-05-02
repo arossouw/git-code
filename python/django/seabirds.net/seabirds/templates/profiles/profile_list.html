@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+
+{% block content %}
+
+{% if seabird and country %} <h2> Seabird researchers in {% if country|slice:"6" == 'United' %}the{% endif %} {{ country }} studying {{ seabird|lower }} </h2 >
+{% else %}{% if seabird %} <h2> Seabird researchers studying {{ seabird|lower }} </h2>
+{% else %}{% if country %} <h2> Seabird researchers  in {% if country|slice:"6" == 'United' %}the{% endif %} {{ country }}</h2>
+{% else %} <h2> Seabird researchers </h2>
+{% endif %}{% endif %}{% endif %}
+
+<table>
+<tr> 
+<th> Name </th>
+<th> Institution </th>
+<th> Country </th>
+</tr>
+{% for p in object_list  %}
+<tr>
+<td>
+<a href="{% url profiles_profile_detail p.user %}"> {{ p.user.first_name|capfirst }} 
+{{ p.user.last_name|capfirst }}</a>
+</td>
+<td>
+{% if p.institution %}
+{% if p.institution_website %}<a href="{{ p.institution_website }}">{% endif %}
+{{ p.institution }}
+{% if p.institution_website %}</a>{% endif %}
+{% endif %}
+</td>
+<td>
+{% if p.country %}
+{{ p.country.name }}
+{% endif %}
+</td>
+</tr>
+{% endfor %}
+</table>
+{% endblock content %}
+
+{% block leftbar %}
+<div class="ym-grid">
+{% for p in object_list %}
+{% if p.photograph  %}
+<div class="ym-g33 ym-gl">
+{% thumbnail p.photograph "100x100" crop="center" as im %}
+    <a href="{{ p.get_absolute_url }}" title="{{ p.user.first_name|capfirst }} {{ p.user.last_name|capfirst }}"><img src="{{ im.url }}" width="{{ im.width }}"  class="flexible"></a>
+{% endthumbnail %}
+</div>
+{% endif %}
+{% endfor %}
+</div>
+{% endblock leftbar%}
+                                    
+{% block sidebar %}
+<h3>Filters</h3>
+
+<h4>Country</h4>
+{% for p in profile_countries %}
+  {%if p.name %}<{{p.tag}} {{ p.href|safe }} class="{{ p.classes }}">{{ p.name }}</{{ p.tag }}>{% endif %}
+{% endfor %}
+
+<h4>Seabird Family</h4>
+{% for b in profile_birds %}
+  <{{b.tag}} {{ b.href|safe }} class="{{ b.classes }}">{{ b.choice }}</{{ b.tag }}>
+{% endfor %}
+
+{% endblock sidebar %}

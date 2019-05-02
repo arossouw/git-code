@@ -1,0 +1,34 @@
+language: python
+# See tox.ini for env list
+python: 3.5  # this is needed to fool travis to have python3.5 as well
+env:
+- TOXENV=checkmanifest
+- TOXENV=flake8-check
+- TOXENV=isort-check
+- TOXENV=py27-django110-tests-usetztrue
+- TOXENV=py27-django111-tests-usetzfalse
+- TOXENV=py27-django111-tests-usetztrue
+- TOXENV=py27-django16-tests-usetzfalse
+- TOXENV=py27-django16-tests-usetztrue
+- TOXENV=py27-django17-tests-usetztrue
+- TOXENV=py27-django18-tests-usetztrue
+- TOXENV=py27-django19-tests-usetztrue
+- TOXENV=py34-django110-tests-usetztrue
+- TOXENV=py34-django111-tests-usetztrue
+- TOXENV=py34-django16-tests-usetzfalse
+- TOXENV=py34-django16-tests-usetztrue
+- TOXENV=py34-django17-tests-usetztrue
+- TOXENV=py34-django18-tests-usetztrue
+- TOXENV=py34-django19-tests-usetztrue
+- TOXENV=py35-django110-tests-usetztrue
+- TOXENV=py35-django111-tests-usetzfalse
+- TOXENV=py35-django111-tests-usetztrue
+- TOXENV=py35-django19-tests-usetztrue
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libffi-dev python-dev libssl-dev
+install:
+- pip install tox>=2.1
+script:
+- tox
+sudo: true

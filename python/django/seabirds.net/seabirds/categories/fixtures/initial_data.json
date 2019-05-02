@@ -1,0 +1,144 @@
+[
+    {
+        "pk": 1, "model": "categories.seabirdfamily", "fields": {
+            "choice": "Albatrosses",
+            "family": "Diomedeidae"
+        }
+    },
+    {
+        "pk": 2, "model": "categories.seabirdfamily", "fields": {
+            "choice": "Auks" ,
+            "family": "Alcidae"
+        }
+    },
+    {
+        "pk": 3, "model": "categories.seabirdfamily", "fields": {
+            "choice": "Cormorants",
+            "family": "Phalacrocoracidae"
+        }
+    },
+    {
+        "pk": 4, "model": "categories.seabirdfamily", "fields": {
+            "choice": "Diving petrels", 
+            "family": "Pelecanoididae"
+        }
+    },
+    {
+        "pk": 5, "model": "categories.seabirdfamily", "fields": {
+            "choice": "Frigatebirds" ,
+            "family": "Fregatidae"
+        }
+    },
+    {
+        "pk": 6, "model": "categories.seabirdfamily", "fields": {
+            "choice": "Gannets and boobies" ,
+            "family": "Sulidae"
+        }
+    },
+    {
+        "pk": 7, "model": "categories.seabirdfamily", "fields": {
+            "choice": "Gulls and kittiwakes",
+            "family": "Laridae"
+        }
+    },
+    {
+        "pk": 8, "model": "categories.seabirdfamily", "fields": {
+            "choice": "Pelicans",
+            "family": "Pelecanidae"
+        }
+    },
+    {
+        "pk": 9, "model": "categories.seabirdfamily", "fields": {
+            "choice": "Penguins",
+            "family": "Spheniscidae"
+        }
+    },
+    {
+        "pk": 10, "model": "categories.seabirdfamily", "fields": {
+            "choice": "Petrels",
+            "family": "Procellariidae"
+        }
+    },
+    {
+        "pk": 11, "model": "categories.seabirdfamily", "fields": {
+            "choice": "Skuas",
+            "family": "Sterocorariidae"
+        }
+    },
+    {
+        "pk": 12, "model": "categories.seabirdfamily", "fields": {
+            "choice": "Storm petrels",
+            "family": "Hydrobatidae"
+        }
+    },
+    {
+        "pk": 13, "model": "categories.seabirdfamily", "fields": {
+            "choice": "Terns",
+            "family": "Sternidae"
+        }
+    },
+    {
+        "pk": 14, "model": "categories.seabirdfamily", "fields": {
+            "choice": "Tropicbirds",
+            "family": "Phaethonidae"
+        }
+    },
+    {
+        "pk": 15, "model": "categories.seabirdfamily", "fields": {
+            "choice": "Skimmers" ,
+            "family" : "Rhynchopidae"
+        }
+    },
+    {
+        "pk": 16, "model": "categories.seabirdfamily", "fields": {
+            "choice": "Sea ducks" ,
+            "family" : "Merginae"
+        }
+    },
+    {
+        "pk": 1, "model": "categories.institutiontype", "fields": {
+            "choice": "Academic (e.g., university, polytechnic)" 
+        }
+    },
+    {
+        "pk": 2, "model": "categories.institutiontype", "fields": {
+            "choice": "Government (e.g., federal or local authority)" 
+        }
+    },
+    {
+        "pk": 3, "model": "categories.institutiontype", "fields": {
+            "choice": "NGO (e.g., non-profit, community group)" 
+        }
+    },
+    {
+        "pk": 4, "model": "categories.institutiontype", "fields": {
+            "choice": "Private (e.g., consultancy, freelance)" 
+        }
+    },
+    {
+        "pk": 1, "model": "categories.roletype", "fields": {
+            "choice": "Student" 
+        }
+    },
+    {
+        "pk": 2, "model": "categories.roletype", "fields": {
+            "choice": "Researcher" 
+        }
+    },
+    {
+        "pk": 3, "model": "categories.roletype", "fields": {
+            "choice": "Technician" 
+        }
+    },
+    {
+        "pk": 4, "model": "categories.roletype", "fields": {
+            "choice": "Manager" 
+        }
+    },
+    {
+        "pk": 5, "model": "categories.roletype", "fields": {
+            "choice": "Not currently working" 
+        }
+    }
+]
+
