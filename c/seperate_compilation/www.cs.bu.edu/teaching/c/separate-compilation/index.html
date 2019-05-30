@@ -1,0 +1,900 @@
+<HTML>
+<HEAD>
+<TITLE>Modules, Separate Compilation, Make Files</TITLE>
+</HEAD>
+
+<BODY>
+<H1 ALIGN=center>Modules, Separate Compilation, Make Files</H1>
+<HR>
+
+<P>
+<OL>
+<LI>
+<B>Modularizing a Program:</B><P>
+
+Let's look at a <A TARGET=_blank HREF="adjust1.c">program</A> that
+adjusts grades.
+
+<P>
+There are some parts of the program that are <EM>generic</EM> and could
+be separated out for possible reused.
+
+<P>
+<EM>What are the parts that could be separated out?</EM>
+
+<P>
+<LI>
+<B>Broken Up Version:</B><P>
+
+When we separate a set of code into a self-contained entity, we call
+this a <EM>module</EM>.
+
+<P>
+<HR ALIGN=left WIDTH="20%">
+<B>Note:</B>
+A module is also sometimes called a <EM>library</EM>, although the term
+library is used more for code that is in an <EM>already-compiled</EM>
+form.
+<HR ALIGN=left WIDTH="20%">
+
+<P>
+To create a C module for the <EM>grade</EM> functions, we need to
+create 2 new source code files: a <CODE>.h</CODE> file and a
+<CODE>.c</CODE> file.  It is typical for the base name of those files
+to be the same, and to relate to the functionality of the module.
+Thus, we'll name them:
+
+<P>
+<CENTER>
+<TABLE BORDER=1>
+<TR>
+<TH>
+<CODE>grades.h</CODE>
+</TH>
+<TH>
+<CODE>grades.c</CODE>
+</TH>
+</TR>
+<TR VALIGN=top>
+<TD>
+Contains stuff people <EM>calling</EM> the grade functions need to know.
+</TD>
+<TD>
+Contains stuff people <EM>writing</EM> the grade functions need to know.
+</TD>
+</TR>
+</TABLE>
+</CENTER>
+
+<P>
+Since this module only contains the grade functions, we also need a
+file for the main program--let's call it <CODE>adjust.c</CODE>.
+
+<P>
+We've already broken our original program up into these files and made
+them available for you to <A HREF="download/">download</A>.  There is
+also a copy of a data file (for testing) and a <EM>make file</EM> that
+we'll use shortly.
+
+<P>
+Let's look at each file and discuss them in more detail...
+
+<P>
+<DL>
+<DT><B>grades.h</B>
+<DD>
+This is the <EM>interface</EM> to the module.  People who use the
+module (i.e., in a main program or another module) will have to
+<B>include</B> this header file.  It should only contain the public
+information necessary for people to use the module--mainly, this means
+it contains <EM>functional prototypes</EM> (for those functions in the
+module that users of the module are allowed to access).  It may also
+contain things like <EM>constants and type definitions</EM>.
+
+<DT><B>grades.c</B>
+<DD>
+This is the <EM>implementation</EM> of the module.  Those who use the
+grades module must link their code with this code.  It contains all the
+<EM>internals</EM> of the module, such as the <EM>definitions</EM> (i.e.,
+bodies) of all the functions.
+
+<DT><B>adjust.c</B>
+<DD>
+The main program and <EM>user</EM> of the grades module.  Since it relies
+on the grades module, it includes the grades header:
+
+<BLOCKQUOTE><PRE>
+#include "grades.h"
+</PRE></BLOCKQUOTE>
+
+</DL>
+
+<P>
+<HR WIDTH="20%" ALIGN=left>
+<B>Note:</B> 
+When including a non-standard header file (like one you wrote), list
+its name in double quotes (like above).  When including system header
+files, list their names in angle brackets, as in:
+
+<BLOCKQUOTE><PRE>
+#include &lt;stdio.h&gt;
+</PRE></BLOCKQUOTE>
+<HR>
+
+<P>
+<EM>How does the implementation file <CODE>grades.c</CODE> get prototypes
+for <CODE>PrintGrades()</CODE> and <CODE>AdjustGrades()</CODE>?</EM>
+
+<P>
+<LI>
+<B>Wrapping Header Files:</B><P>
+
+One thing is missing from our new grades module...The header should be
+<EM>wrapped</EM> to prevent <EM>multiple inclusion</EM>.
+
+<P>
+Header files, like our header for the grades module (<CODE>grades.h</CODE>),
+include things like: constants, new types, and functional prototypes.
+This code should only be <EM>included</EM> into a <CODE>.c</CODE> file
+once; otherwise, the compiler may complain and refuse to compile the
+<CODE>.c</CODE> file.
+
+<P>
+You may think that including the code from a header twice would be unlikely,
+in that we would rarely mistakenly do the following:
+
+<BLOCKQUOTE><PRE>
+#include "grades.h"
+<B>...</B>
+#include "grades.h"
+</PRE></BLOCKQUOTE>
+
+<P>
+However, multiple inclusion is often likely in the following form:
+
+<BLOCKQUOTE><PRE>
+#include "grades.h"
+<B>...</B>
+#include "final.h"
+</PRE></BLOCKQUOTE>
+
+<P>
+where <CODE>final.h</CODE> <EM>includes</EM> <CODE>grades.h</CODE>.
+In this case, you might get some compiler error like:
+
+<BLOCKQUOTE><PRE>
+In file included from somefile.c:17:
+final.h:12: redefinition of `<EM>something</EM>'
+final.h:12: `<EM>something</EM>' previously declared here
+</PRE></BLOCKQUOTE>
+
+<P>
+I.e., it did not like the fact that the same thing was defined twice.
+
+<P>
+To solve the problem of multiple inclusion, we <EM>wrap</EM> the header
+by doing the following...  Put the whole header inside an
+<EM>if-not-defined</EM> construct, like:
+
+<P>
+<BLOCKQUOTE><PRE>
+<FONT COLOR="#ee0000">#ifndef GRADES_H
+#define GRADES_H</FONT>
+<B>...</B>
+CONTENTS OF grades.h
+<B>...</B>
+<FONT COLOR="#ee0000">#endif /* not defined GRADES_H */</FONT>
+</PRE></BLOCKQUOTE>
+
+where <CODE>GRADES_H</CODE> is unique to the file <CODE>grades.h</CODE>.
+
+<P>
+<HR ALIGN=left WIDTH="20%">
+<B>Aside:</B>
+A typical practice to get a unique symbol (e.g., <CODE>GRADES_H</CODE>) is
+to take the file name of the header (e.g., <CODE>grades.h</CODE>) and:
+
+<UL>
+<LI>change any non-alphanumeric characters to the underscore
+(<CODE>_</CODE>), and
+<LI>make all letters uppercase.
+</UL>
+
+<P>
+This usually gives a unique symbol.
+<HR ALIGN=left WIDTH="20%">
+
+<P>
+Being wrapped, the first time <CODE>grades.h</CODE> is included:
+
+<BLOCKQUOTE><PRE>
+#include "grades.h"  /* GRADES_H not defined, but once this */
+                     /* include is done it will be.         */
+</PRE></BLOCKQUOTE>
+
+the symbol <CODE>GRADES_H</CODE> will not be defined and the code in
+the header will be compiled.  Later, if the header is included again
+(directly or indirectly):
+
+<BLOCKQUOTE><PRE>
+<B>...</B>
+#include "final.h"  /* This tries to include grades.h. */
+</PRE></BLOCKQUOTE>
+
+in the same source file, then the code will be skipped since
+<CODE>GRADES_H</CODE> is already defined (i.e., it got defined the
+first time we included <CODE>grades.h</CODE>).
+
+<P>
+<EM>
+Go ahead and wrap <CODE>grades.h</CODE> (i.e., edit <CODE>grades.h</CODE>).
+</EM>
+
+<P>
+<LI>
+<B>Compiling a program made up of multiple parts:</B><P>
+
+Now we would like to compile and link our program, which is made up of
+multiple files (header (<CODE>.h</CODE>) and source (<CODE>.c</CODE>)
+files).
+
+<P>
+We can use <CODE>gcc</CODE> as usual, and just need to specify the
+source code files that make up the program...
+
+<P>
+<BLOCKQUOTE><PRE>
+gcc -ansi -pedantic -Wall -o adjust adjust.c grades.c
+</PRE></BLOCKQUOTE>
+
+<P>
+<HR ALIGN=left WIDTH="20%">
+<B>Note:</B>
+We DO NOT list the header files.  Since they are <EM>included</EM> into
+source files, they will get compiled.  The <NOBR><CODE>-o
+adjust</CODE></NOBR> tells it to give the executable the name
+<CODE>adjust</CODE> instead of <CODE>a.out</CODE>.
+<HR ALIGN=left WIDTH="20%">
+
+<P>
+Compiling produces a problem:
+
+<BLOCKQUOTE><PRE>
+/var/tmp/ccy8x5x_1.o: In function `main':
+/var/tmp/ccy8x5x_1.o(.text+0x1e0): undefined reference to `PrintGrades'
+/var/tmp/ccy8x5x_1.o(.text+0x21c): undefined reference to `PrintGrades'
+</PRE></BLOCKQUOTE>
+
+<P>
+It is complaining that there is something called <CODE>PrintGrades()</CODE>
+(used in <CODE>main()</CODE>) that is not defined.  <EM>What kind of
+error is this?</EM>
+
+<P>
+Fix the error by correcting the function name in <CODE>grades.c</CODE>.
+Then, recompile:
+
+<P>
+<BLOCKQUOTE><PRE>
+gcc -ansi -pedantic -Wall -o adjust adjust.c grades.c
+</PRE></BLOCKQUOTE>
+
+<P>
+We now have an executable <CODE>adjust</CODE> that can be run on the
+data file <CODE>data1</CODE>.
+
+<P>
+<BLOCKQUOTE><PRE>
+adjust &lt; data1
+</PRE></BLOCKQUOTE>
+
+<P>
+It should run fine.
+
+<P>
+<HR WIDTH="20%" ALIGN=left>
+
+<P>
+Notice that after we made a change to the source code in
+<CODE>adjust.c</CODE>, we ended up recompiling everything with...
+
+<P>
+<BLOCKQUOTE><PRE>
+gcc -ansi -pedantic -Wall -o adjust <B>adjust.c grades.c</B>
+</PRE></BLOCKQUOTE>
+
+<P>
+This is wasteful because nothing in <CODE>adjust.c</CODE> changed,
+only <CODE>grades.c</CODE>, so why should <CODE>adjust.c</CODE> be
+recompiled?!
+
+<P>
+<LI>
+<A NAME="sep-compile"></A>
+<B>Compiling source code <EM>separately</EM>:</B><P>
+
+What we should have been doing instead is compiling source code
+to intermediate <EM>object files</EM> and then linking them together.
+
+<P>
+First, recall that the program is made up of 3 source files:
+
+<P>
+<UL>
+<LI><CODE>adjust.c</CODE>, a main program.
+<LI><CODE>grades.h</CODE>, interface for the grades module.
+<LI><CODE>grades.c</CODE>, implementation file for the grades module.
+</UL>
+
+<P>
+We want to <EM>compile</EM> each piece of the program separately and
+then <EM>link</EM> them together.  This will allow us to only
+regenerate the parts of the program that are affected when we change some
+source code.
+
+<P>
+When we <EM>just compile</EM> source code (without linking it
+together), it means that we take the <CODE>.c</CODE> files and generate
+intermediate <EM>object (<CODE>.o</CODE>) files</EM>.
+
+<P>
+To just compile source code, use the <B><CODE>-c</CODE></B> flag
+with the compiler...
+
+<P>
+<BLOCKQUOTE><PRE>
+gcc -ansi -pedantic -Wall -c adjust.c
+gcc -ansi -pedantic -Wall -c grades.c
+</PRE></BLOCKQUOTE>
+
+<P>
+This will generate the object files <CODE>adjust.o</CODE> (for
+<CODE>adjust.c</CODE>) and <CODE>grades.o</CODE> (for
+<CODE>grades.c</CODE>).  List your files to see the intermediate
+<EM>object</EM> (<CODE>.o</CODE>) files.
+
+<P>
+Finally, to link the object files (<CODE>.o</CODE>) into an executable
+that we can run, we use the compiler again (although this time it will
+just pass the <CODE>.o</CODE> files on to the <EM>linking</EM> stage):
+
+<BLOCKQUOTE><PRE>
+gcc -ansi -pedantic -Wall -o adjust adjust.o grades.o
+</PRE></BLOCKQUOTE>
+
+<P>
+Remember, we use of the <B><CODE>-o</CODE></B> flags to tell it to call
+the executable <CODE>adjust</CODE> instead of <CODE>a.out</CODE>.
+
+<P>
+<LI>
+<B>Dependency chart:</B><P>
+
+Since we have just compiled the executable <CODE>adjust</CODE>
+<EM>separately</EM> on the commandline, we know exactly what commands
+are needed to generate the pieces that make up the executable.
+
+<P>
+We would like to know under what circumstances we'll have to
+regenerate each of those pieces.  For example, if any of the object
+(<CODE>.o</CODE>) files get changed, then they have to be relinked into
+a new executable. Nonetheless, that's not the only case.
+
+<P>
+Let's start from our goal (i.e., to have an executable named
+<CODE>adjust</CODE>) and draw a <EM>dependency chart</EM>...
+
+<P>
+The executable <B>adjust</B> is made up of the 2 object files,
+<B>adjust.o</B> and <B>grades.o</B>.  Thus, <B>adjust</B>
+<EM>depends</EM> on those 2 files.  To generate <B>adjust</B> from
+those files, we <EM>link</EM> them together.
+
+<BLOCKQUOTE><PRE>
+<FONT COLOR="#ee0000">        adjust
+       /       \
+     /    link   \
+   /               \
+adjust.o       grades.o</FONT>
+</PRE></BLOCKQUOTE>
+
+<P>
+Next, <B>adjust.o</B> depends on <B>adjust.c</B> and <B>grades.o</B>
+depends on <B>grades.c</B>.  You generate these object files by
+<EM>compiling</EM> the corresponding <CODE>.c</CODE> files.
+
+<BLOCKQUOTE><PRE>
+        adjust
+       /       \
+     /    link   \
+   /               \
+adjust.o       grades.o
+<FONT COLOR="#ee0000">  |                 |
+  |     compile     |
+  |                 |
+adjust.c       grades.c</FONT>
+</PRE></BLOCKQUOTE>
+
+<P>
+Finally, the 2 source code files depend on <B>grades.h</B> since they
+both <EM>include</EM> that file.  This, however, is a slightly different
+dependency since the <CODE>.c</CODE> don't need to be <EM>generated</EM>
+like the <CODE>.o</CODE> files and the executable.
+
+<BLOCKQUOTE><PRE>
+        adjust
+       /       \
+     /    link   \
+   /               \
+adjust.o       grades.o
+  |                 |
+  |     compile     |
+  |                 |
+adjust.c       grades.c
+<FONT COLOR="#ee0000">   \               /
+     \  include  /
+       \       /
+       grades.h</FONT>
+</PRE></BLOCKQUOTE>
+
+<P>
+<HR WIDTH="40%" ALIGN=left>
+We've just listed all the dependencies for the executable
+<CODE>adjust</CODE>.  The executable depends on some things
+<EM>directly</EM> (like the <CODE>.o</CODE> files) and some things
+<EM>indirectly</EM> (i.e., you need the <CODE>.c</CODE> files to make
+the <CODE>.o</CODE> files to make the executable).
+
+<P>
+Here is the complete <EM>dependency chart</EM>...
+
+<A NAME="depend-chart"></A>
+<BLOCKQUOTE><PRE>
+DEPENDENCY CHART FOR adjust EXECUTABLE
+
+        adjust
+       /       \
+     /    link   \
+   /               \
+adjust.o       grades.o
+  |                 |
+  |     compile     |
+  |                 |
+adjust.c       grades.c
+   \               /
+     \  include  /
+       \       /
+       grades.h
+
+Dependencies go downward.
+How to "get" or generate files goes upward.
+</PRE></BLOCKQUOTE>
+
+<P>
+With such a dependency chart, we can answer questions about what we
+need to regenerate if we change certain files.
+
+<P>
+For example, suppose we change the file <CODE>adjust.c</CODE>...
+<EM>What has to be regenerated?</EM>
+
+<P><B>Answer:</B> First, recompile <CODE>adjust.c</CODE> to get
+<CODE>adjust.o</CODE>.  Then, relink all the object files together
+again to get the executable <CODE>adjust</CODE>.
+
+<P>
+<EM>Now, suppose we changed <CODE>grades.h</CODE>?</EM>
+
+<P>
+<HR WIDTH="40%" ALIGN=left>
+Note that when either a <CODE>.c</CODE> file changes or a header file
+included by a <CODE>.c</CODE> file changes, we have to regenerate the
+corresponding <CODE>.o</CODE> file.
+<HR WIDTH="40%" ALIGN=left>
+
+<P>
+<LI>
+<B>Why Make Utility:</B><P>
+
+Since it is tedious to recompile pieces of a program when something
+changes, people often use the <EM>make</EM> utility instead.
+
+<P>
+<EM>Make</EM> needs a <EM>make file</EM> that encodes both the
+dependencies between files and the commands needed to generate files.
+
+<P>
+When you run the <EM>make</EM> utility, it examines the
+<EM>modification times</EM> of files and determines what needs to be
+regenerated.  Files that are <EM>older</EM> than the files they depend
+on must be regenerated.  Regenerating one file may cause others to
+become <EM>old</EM>, so that several files end up being regenerated.
+
+<P>
+<HR ALIGN=left WIDTH="20%">
+<B>Aside:</B>
+Note the difference between the <EM>make utility</EM> (a program you
+run) and a <EM>make file</EM> (that tells the <EM>make utility</EM>
+how to compile/link a specific program).
+<HR ALIGN=left WIDTH="20%">
+
+<P>
+A make file may either be named <B>Makefile</B> (first letter uppercase)
+or <B>makefile</B> (all lowercase).  We will prefer the uppercase form,
+<B>Makefile</B>.
+
+<P>
+<HR ALIGN=left WIDTH="20%">
+<B>Aside:</B>
+Make files can have other file names, but then you'll have to
+tell the <EM>make</EM> utility what the name of the make file is (using
+a commandline option).
+<HR ALIGN=left WIDTH="20%">
+
+<P>
+It makes things much easier if the make file is in the same directory
+as the source code files.  You can create a make file in any text editor.
+
+<P>
+Let's look at the <A TARGET=_blank HREF="download/Makefile">make
+file</A> for the executable <CODE>adjust</CODE>.
+
+<P>
+<LI>
+<B>Writing a Make File:</B><P>
+
+For simple make files, there will be at least 2 parts:
+
+<P>
+<UL>
+<LI>A set of <EM>variables</EM>, which will specify things like the
+C compiler/linker to use, flags for the compiler, etc.
+<LI>A set of <EM>targets</EM>, i.e., files that have to be generated.
+</UL>
+
+<P>
+Keep in mind that make files use their own <EM>language</EM>, so 
+DON'T expect things in them to look like C.
+
+<P>
+Make files should have comments so that they are more readable.  In make
+files, any line starting with a pound sign (<CODE>#</CODE>) is a
+comment, like:
+
+<BLOCKQUOTE><PRE>
+# Makefile for executable adjust
+</PRE></BLOCKQUOTE>
+
+<H4>Variables</H4>
+
+The first variable is for the compiler to use...
+
+<BLOCKQUOTE><PRE>
+CC = gcc
+</PRE></BLOCKQUOTE>
+
+<P>
+In general, the form for setting a variable is:
+
+<BLOCKQUOTE><PRE>
+VARNAME = value
+</PRE></BLOCKQUOTE>
+
+<P>
+(The space around the <CODE>=</CODE> is optional for our version of make,
+but adds to readability).
+
+<P>
+The second variable says what flags to pass to the C compiler...
+
+<BLOCKQUOTE><PRE>
+CFLAGS = -ansi -pedantic -Wall -g
+</PRE></BLOCKQUOTE>
+
+<P>
+Here, the variable includes the flag that adds <EM>debugging information</EM>.
+
+<P>
+The 2 variables, <CODE>CC</CODE> and <CODE>CFLAGS</CODE>, are the ones
+that our version of <EM>make</EM> expects to be set for the C compiler
+and flags to the C compiler, respectively.  You can also use your own
+variables, but <EM>make</EM> has a set of standard variables, like
+these, that it uses.
+
+<P>
+In the next section, <CODE>CC</CODE> and <CODE>CFLAGS</CODE> are used
+in commands needed to compile/link certain files.
+
+<P>
+<HR WIDTH="20%" ALIGN=left>
+<B>NOTE:</B> <EM>Make</EM> actually knows how to compile some
+things automatically, though it needs variables like <CODE>CC</CODE> to
+figure out which compiler to use.  We ignore these automatic
+features and write these commands ourselves to help in learning
+<EM>make</EM>.
+<HR WIDTH="20%" ALIGN=left>
+
+<H4>Targets</H4>
+
+Now that we have the variables we need, we can deal with the targets,
+which are files that must be <EM>generated</EM>.
+
+<P>
+For each target, there are typically 1 or 2 lines in a make file.
+Those lines specify:
+
+<P>
+<OL>
+<LI>its dependencies (easy to determine from a <A
+HREF="#depend-chart">dependency chart</A>)
+<LI>and possibly a command to generate the target (easy to determine
+from knowledge of <A HREF="#sep-compile">separate compilation</A>).
+</OL>
+
+<P>
+By default, the first target in the make file is the one that gets
+generated when you just say "<CODE>make</CODE>" at the commandline, so
+it should be the name of the executable, in our case, <CODE>adjust</CODE>.
+
+<H4>Target: Executable</H4>
+
+Let's examine the first target in our make file (i.e., for
+<CODE>adjust</CODE>)...
+
+<P>
+For a target's dependency line, the target file name should be listed,
+followed by a colon (<B><CODE>:</CODE></B>) and the files it depends on:
+
+<BLOCKQUOTE><PRE>
+adjust: adjust.o grades.o
+</PRE></BLOCKQUOTE>
+
+<P>
+For a target that is an executable, we just list the object files it
+depends on.
+
+<P>
+On the next line, there should be a command that generates the target:
+
+<BLOCKQUOTE><PRE>
+<FONT COLOR="#ee0000">&lt;Tab&gt;</FONT>$(CC) $(CFLAGS) -o adjust adjust.o grades.o 
+</PRE></BLOCKQUOTE>
+
+<P>
+<HR ALIGN=left WIDTH="20%">
+<B>Note:</B>
+This line <B>MUST</B> start with a <CODE>&lt;Tab&gt;</CODE> (i.e., hit
+the Tab key)...it cannot start with a regular space!
+<HR ALIGN=left WIDTH="20%">
+
+<P>
+Note that the variables <CODE>C</CODE> and <CODE>CFLAGS</CODE> are
+used, which means that the command is really:
+
+<BLOCKQUOTE><PRE>
+gcc -ansi -pedantic -Wall -g -o adjust adjust.o grades.o
+</PRE></BLOCKQUOTE>
+
+<P>
+<HR ALIGN=left WIDTH="20%">
+<B>Note:</B>
+Using a variable in a make file involves using the dollar sign
+(<CODE>$</CODE>) and then the variable name in parentheses.
+<HR ALIGN=left WIDTH="20%">
+
+<H4>Targets: Object Files</H4>
+
+<P>
+Our next target is the object file, <CODE>adjust.o</CODE>.
+
+<P>
+For a target that is an object file, we list all files it depends on.
+This means its corresponding <CODE>.c</CODE> file, plus any header
+files its <CODE>.c</CODE> file includes (i.e., include directly or
+indirectly, but not system header files like <CODE>stdio.h</CODE> that
+aren't going to change).
+
+<P>
+So, the dependencies line looks like:
+
+<BLOCKQUOTE><PRE>
+adjust.o: adjust.c grades.h
+</PRE></BLOCKQUOTE>
+
+<P>
+The command to generate this target is:
+
+<BLOCKQUOTE><PRE>
+<FONT COLOR="#ee0000">&lt;Tab&gt;</FONT>$(CC) $(CFLAGS) -c adjust.c
+</PRE></BLOCKQUOTE>
+
+<P>
+Finally, the last object file, <CODE>grades.o</CODE> requires:
+
+<BLOCKQUOTE><PRE>
+grades.o: grades.c grades.h
+<FONT COLOR="#ee0000">&lt;Tab&gt;</FONT>$(CC) $(CFLAGS) -c grades.c 
+</PRE></BLOCKQUOTE>
+
+<P>
+That's all for the make file!!! It just encodes the dependencies and
+the generation commands for 1 executable and its 2 object files.  The
+complete make file looks like:
+
+<BLOCKQUOTE><PRE>
+# Makefile for executable adjust
+
+# *****************************************************
+# Parameters to control Makefile operation
+
+CC = gcc
+CFLAGS = -ansi -pedantic -Wall -g
+
+# ****************************************************
+# Entries to bring the executable up to date
+
+adjust: adjust.o grades.o
+<FONT COLOR="#ee0000">&lt;Tab&gt;</FONT>$(CC) $(CFLAGS) -o adjust adjust.o grades.o 
+
+adjust.o: adjust.c grades.h
+<FONT COLOR="#ee0000">&lt;Tab&gt;</FONT>$(CC) $(CFLAGS) -c adjust.c
+
+grades.o: grades.c grades.h
+<FONT COLOR="#ee0000">&lt;Tab&gt;</FONT>$(CC) $(CFLAGS) -c grades.c 
+</PRE></BLOCKQUOTE>
+
+<P>
+<HR>
+<B>Aside:</B>
+<BR>
+In a make file, if we have to continue a line, we cannot just continue
+on the next line (like in C).  We must end a line with a <CODE>\</CODE>
+(backslash, not the forward slash) to tell make that the line
+continues.  So, we could have written the last target as:
+
+<BLOCKQUOTE><PRE>
+grades.o: grades.c \
+           grades.h
+<FONT COLOR="#ee0000">&lt;Tab&gt;</FONT>$(CC) \
+        $(CFLAGS) -c \
+	grades.c 
+</PRE></BLOCKQUOTE>
+
+<P>
+Only break lines where space would normally go.
+
+<P>
+<HR WIDTH="20%" ALIGN=left>
+
+<P>
+Also, we have done some extra work.  <EM>Make</EM> already knows that a
+<CODE>.o</CODE> can depend on a corresponding <CODE>.c</CODE> file
+(among other things).  It also knows how to compile a <CODE>.c</CODE>
+file into a <CODE>.o</CODE> (assuming the variables <CODE>CC</CODE> and
+<CODE>CFLAGS</CODE> have been set to the values you want--else it uses
+the default compiler).  <EM>Make</EM> does not necessarily know which
+header files a <CODE>.c</CODE> file includes, however, so we needed to
+include that information ourselves.  Therefore, the last target could
+have just been:
+
+<BLOCKQUOTE><PRE>
+grades.o: grades.h
+</PRE></BLOCKQUOTE>
+without any generation command needed after it.
+
+<P>
+The reason we included the extra pieces of information is so that you
+learn how to write complete dependency and generation lines for targets.
+<HR>
+
+<P>
+<LI>
+<B>Using a Make File:</B><P>
+
+Now that we have a make file that encodes the dependencies between the
+files that make up the executable, it is easy to compile that executable.
+
+<P>
+Try using the make file we've given you.  First, remove the old
+executable and object files:
+
+<BLOCKQUOTE><PRE>
+% <B>rm adjust *.o</B>
+</PRE></BLOCKQUOTE>
+
+Then, run make with the command:
+
+<BLOCKQUOTE><PRE>
+% <B>make</B>
+</PRE></BLOCKQUOTE>
+
+<P>
+Remember that this will cause make to generate the <EM>first target</EM>
+in the make file, which is <CODE>adjust</CODE>.
+
+<P>
+Since nothing has been compiled/linked, it will do:
+
+<BLOCKQUOTE><PRE>
+gcc -ansi -pedantic -Wall -g -c adjust.c
+gcc -ansi -pedantic -Wall -g -c grades.c 
+gcc -ansi -pedantic -Wall -g -o adjust adjust.o grades.o 
+</PRE></BLOCKQUOTE>
+
+<P>
+I.e., compile the 2 <CODE>.c</CODE> files into object files, and then
+link the object files into an executable named <CODE>adjust</CODE>.
+
+<P>
+(If you have trouble, make sure that the make file is named
+<B>Makefile</B> and is in the same directory as the source code files.)
+
+<P>
+Now, type the make command again (let's explicitly tell it what
+target to generate this time) and you get:
+
+<BLOCKQUOTE><PRE>
+% <B>make adjust</B>
+make: `adjust' is up to date.
+</PRE></BLOCKQUOTE>
+
+<P>
+Here, make tells you nothing has changed, so it has no work to do.
+
+<P>
+Next, suppose we want the program to be able to handle at least 20
+grades (instead of 10).  Bring up <CODE>adjust.c</CODE> in an editor
+and change:
+
+<BLOCKQUOTE><PRE>
+#define MAX_GRADES  10
+</PRE></BLOCKQUOTE>
+
+so that it reads 20...
+
+<BLOCKQUOTE><PRE>
+#define MAX_GRADES  20
+</PRE></BLOCKQUOTE>
+
+<P>
+After the change has been made, when we use make:
+
+<BLOCKQUOTE><PRE>
+% <B>make</B>
+gcc -ansi -pedantic -Wall -g -c adjust.c 
+gcc -ansi -pedantic -Wall -g -o adjust adjust.o grades.o 
+</PRE></BLOCKQUOTE>
+
+<P>
+it doesn't bother regenerating <CODE>grades.o</CODE>, since the files it
+depends on have not changed.
+
+<P>
+Finally, try changing <CODE>grades.h</CODE> and then <EM>re-making</EM>...
+
+<BLOCKQUOTE><PRE>
+% <B>make</B>
+gcc -ansi -pedantic -Wall -g -c adjust.c
+gcc -ansi -pedantic -Wall -g -c grades.c 
+gcc -ansi -pedantic -Wall -g -o adjust adjust.o grades.o 
+</PRE></BLOCKQUOTE>
+
+<P>
+Since both <CODE>.c</CODE> files include that header, they both have to
+be recompiled and linked together.
+
+</OL>
+
+<P>
+<HR>
+<ADDRESS>
+BU CAS CS - Modules, Separate Compilation, Make Files
+<BR>
+Copyright &copy; 1993-2000 by
+<A TARGET=_top
+>Robert I. Pitts</A>
+&lt;rip at bu dot edu&gt;.
+All Rights Reserved.
+</ADDRESS>
+</BODY>
+</HTML>

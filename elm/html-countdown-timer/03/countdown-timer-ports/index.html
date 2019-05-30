@@ -1,0 +1,23 @@
+<html>
+<head>
+  <style>
+    /* you can style your program here */
+  </style>
+</head>
+<body>
+  <main></main> 
+  <script type="text/javascript" src="elm.js"></script>
+  <script>
+    var app = Elm.Main.embed(document.querySelector('main'), null);
+     
+    window.triggerCounter = function() {
+        app.ports.triggerCounter.send(10);
+    }
+    // you can use ports and stuff here
+  </script>
+  <button onclick="window.triggerCounter()">Trigger Countdown</button>
+ 
+  
+</body>
+</html>
+

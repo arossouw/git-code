@@ -1,0 +1,1 @@
+{"version":3,"file":"\/home\/arno\/code\/cljs_first_project\/out\/cljs_first_project\/core.js","sources":["core.cljs"],"lineCount":11,"mappings":";AAAA;;;AAGA,GAAA,OAASA;AAAT;AAAA,AAAA,AAASA,+BACP,uCAAA,vCAACC;;AAEH,MAAA,NAACC","names":["cljs-first-project.core\/conn","clojure.browser.repl\/connect","js\/alert"]}

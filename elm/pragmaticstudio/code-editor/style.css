@@ -1,0 +1,102 @@
+body {
+  font-family: "Helvetica Neue", "Helvetica", "Verdana", Arial, sans-serif;
+  color: #4f4f4f;
+  background-color: #eaeaea;
+}
+
+h1, h2, h3, h4 {
+  color: #666666;
+  text-align: center;
+}
+
+h1 {
+  font-size: 4em;
+}
+
+h2 {
+  margin-top: 0.25em;
+  font-weight: 300;
+  font-size: 2.5em;
+}
+
+h3 {
+  font-weight: 300;
+  font-size: 2.5em;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+select {
+  margin-left: 35px;
+  font-size: 14px;
+  height: 29px;
+  padding: 5px;
+}
+
+#code-editor {
+  font-size: 24px;
+}
+
+.stats {
+  font-size: 1.25em;
+  text-transform: uppercase;
+  text-align: right;
+}
+
+.stats .label {
+  color: #333;
+  font-weight: bold;
+}
+
+.stats .value {
+  margin-right: 5px;
+}
+
+.hint {
+  font-size: 1.25em;
+  text-transform: uppercase;
+  color:  #993030;
+}
+
+select {
+  height: 34px;
+  padding: 6px 30px;
+  font-size: 1.5em;
+  margin-left: 0;
+}
+
+.header {
+  margin-bottom: 3em;
+}
+
+.row {
+  margin-top: 2em;  
+}
+
+.row .toolbar {
+  margin-top: 1em;  
+}
+
+[class*='col-'] > div {
+  border: 3px solid #ccc;
+  height: 200px;
+}
+
+[class*='col-'] > #code-editor {
+  border: none;
+  height: 250px;
+}
+
+[class*='col-'] > #editor-toolbar {
+  border: none;
+  height: 50px;
+}
+
+[class*='col-'] > div.app-1,
+[class*='col-'] > div.app-2 {
+  height: 300px;
+}
+
+[class*='col-'] > div.app-3 {
+  height: 100px;
+}

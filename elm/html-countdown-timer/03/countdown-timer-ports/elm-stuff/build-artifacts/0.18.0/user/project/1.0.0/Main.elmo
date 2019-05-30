@@ -1,0 +1,200 @@
+var _user$project$Main$triggerCounter = _elm_lang$core$Native_Platform.incomingPort('triggerCounter', _elm_lang$core$Json_Decode$int);
+var _user$project$Main$Model = F2(
+	function (a, b) {
+		return {counter: a, isRunning: b};
+	});
+var _user$project$Main$init = function (flags) {
+	return {
+		ctor: '_Tuple2',
+		_0: A2(_user$project$Main$Model, flags, false),
+		_1: _elm_lang$core$Platform_Cmd$none
+	};
+};
+var _user$project$Main$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		switch (_p0.ctor) {
+			case 'TriggerCounter':
+				return {
+					ctor: '_Tuple2',
+					_0: A2(
+						_user$project$Main$Model,
+						_elm_lang$core$Maybe$Just(_p0._0),
+						true),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'CountDown':
+				var _p1 = model.counter;
+				if (_p1.ctor === 'Nothing') {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{isRunning: false}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					var _p2 = _p1._0;
+					return _elm_lang$core$Native_Utils.eq(_p2, 1) ? {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								isRunning: false,
+								counter: _elm_lang$core$Maybe$Just(0)
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					} : {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								counter: _elm_lang$core$Maybe$Just(_p2 - 1)
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				}
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{isRunning: !model.isRunning}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+		}
+	});
+var _user$project$Main$PauseResumeCounter = {ctor: 'PauseResumeCounter'};
+var _user$project$Main$view = function (model) {
+	var _p3 = model.counter;
+	if (_p3.ctor === 'Nothing') {
+		return A2(
+			_elm_lang$html$Html$div,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$h1,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Counter Not Started'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			});
+	} else {
+		var _p4 = _p3._0;
+		return model.isRunning ? A2(
+			_elm_lang$html$Html$div,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$h1,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								'Time remaining: ',
+								_elm_lang$core$Basics$toString(_p4))),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$button,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$PauseResumeCounter),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Pause Counter'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}) : (_elm_lang$core$Native_Utils.eq(_p4, 0) ? A2(
+			_elm_lang$html$Html$div,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$h1,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Counter expired! '),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}) : A2(
+			_elm_lang$html$Html$div,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$h1,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								'Counter paused! Time remaining: ',
+								_elm_lang$core$Basics$toString(_p4))),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$button,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$PauseResumeCounter),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Resume Counter'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}));
+	}
+};
+var _user$project$Main$CountDown = function (a) {
+	return {ctor: 'CountDown', _0: a};
+};
+var _user$project$Main$TriggerCounter = function (a) {
+	return {ctor: 'TriggerCounter', _0: a};
+};
+var _user$project$Main$subscriptions = function (model) {
+	return model.isRunning ? _elm_lang$core$Platform_Sub$batch(
+		{
+			ctor: '::',
+			_0: A2(_elm_lang$core$Time$every, _elm_lang$core$Time$second, _user$project$Main$CountDown),
+			_1: {
+				ctor: '::',
+				_0: _user$project$Main$triggerCounter(_user$project$Main$TriggerCounter),
+				_1: {ctor: '[]'}
+			}
+		}) : _user$project$Main$triggerCounter(_user$project$Main$TriggerCounter);
+};
+var _user$project$Main$main = _elm_lang$html$Html$programWithFlags(
+	{init: _user$project$Main$init, view: _user$project$Main$view, update: _user$project$Main$update, subscriptions: _user$project$Main$subscriptions})(
+	_elm_lang$core$Json_Decode$oneOf(
+		{
+			ctor: '::',
+			_0: _elm_lang$core$Json_Decode$null(_elm_lang$core$Maybe$Nothing),
+			_1: {
+				ctor: '::',
+				_0: A2(_elm_lang$core$Json_Decode$map, _elm_lang$core$Maybe$Just, _elm_lang$core$Json_Decode$int),
+				_1: {ctor: '[]'}
+			}
+		}));

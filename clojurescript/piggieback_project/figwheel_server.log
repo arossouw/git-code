@@ -1,0 +1,5 @@
+[0mCompiling "out/main.js" from ["src"]...
+notifying browser that file changed:  out/goog/deps.js
+notifying browser that file changed:  out/cljs_deps.js
+notifying browser that file changed:  out/piggieback_project/test.js
+[32mSuccessfully compiled "out/main.js" in 0.085 seconds.[0m

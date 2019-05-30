@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Code Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row header">
+      <div class="col-md-12">
+        <h1>Code Portal</h1>
+        <h2>Cargo-culting as a service</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2"><div class="app-1"></div></div>
+      <div class="col-md-8">
+        <div id="code-editor"></div>    
+        <div id="editor-toolbar"></div>
+      </div>
+      <div class="col-md-2"><div class="app-2"></div></div>
+    </div>
+    <div class="row">
+      <div class="col-md-12"><div class="app-3"></div></div>
+    </div>
+  </div>
+
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js" type="text/javascript" charset="utf-8"></script>
+  <script src="toolbar.js"></script>
+  <script>
+    var aceEditor = ace.edit("code-editor");
+    aceEditor.setTheme("ace/theme/monokai");
+    aceEditor.getSession().setMode("ace/mode/elm");
+    aceEditor.setValue('text "Howdy!"');
+    aceEditor.focus();
+
+    var elmHere = document.getElementById('editor-toolbar');
+    var elmApp = Elm.EditorToolbar.embed(elmHere);
+
+    elmApp.ports.setEditorTheme.subscribe(function(theme) {
+      aceEditor.setTheme("ace/theme/" + theme.toLowerCase());
+    });
+
+    aceEditor.addEventListener('copy', function(text) {
+      elmApp.ports.copied.send(text);
+    });
+
+    aceEditor.addEventListener('paste', function(e) {
+      elmApp.ports.pasted.send(e.text);
+    });
+  </script>
+
+</body>
+</html>
+
+
+
+
+
+
+

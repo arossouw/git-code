@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sand Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row header">
+      <div class="col-md-12">
+        <h1>Go Pound Sand</h1>
+        <h2>Curated grains of sand for the perfect sandbox!</h2>
+        <h3>(sold by the pound)</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4"><div class="app-1"></div></div>
+      <div class="col-md-4"><div class="app-2"></div></div>
+      <div class="col-md-4"><div class="app-3"></div></div>
+    </div>
+    <div class="row">
+      <div class="col-md-8"><div class="app-4"></div></div>
+      <div class="col-md-4">
+        <div id="elm-goes-here"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6"><div class="app-5"></div></div>
+      <div class="col-md-6"><div class="app-6"></div></div>
+    </div>
+  </div>
+
+  <script src="calculator.js"></script>
+  <script>
+    var elmHere = document.getElementById('elm-goes-here');
+    var elmApp = Elm.SandCalculator.embed(elmHere);
+  </script>
+</body>
+</html>

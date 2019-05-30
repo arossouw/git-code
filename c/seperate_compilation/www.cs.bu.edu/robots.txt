@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /~hwxi/academic/grs_applications_w/
+Disallow: /faculty/hwxi/academic/grs_applications_w/

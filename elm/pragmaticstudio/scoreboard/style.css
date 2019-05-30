@@ -1,0 +1,89 @@
+body {
+  font-family: "Helvetica Neue", "Helvetica", "Verdana", Arial, sans-serif;
+  color: #4f4f4f;
+  background-color: #eaeaea;
+}
+
+h1, h2, h3, h4 {
+  color: #666666;
+  text-align: center;
+}
+
+h1 {
+  font-size: 4em;
+}
+
+h2 {
+  margin-top: 0.25em;
+  font-weight: 300;
+  font-size: 2.5em;
+}
+
+h3 {
+  font-weight: 300;
+  font-size: 2.5em;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+ul {
+  list-style: none;
+}
+
+li.game {
+  font-size: 2rem;
+  margin-top: 2rem;
+  padding-bottom: 2rem;
+  padding-right: 2rem;
+  padding-left: 2rem;
+  border-bottom: 2px solid #ccc;
+  clear: both;
+}
+
+li.game:last-child {
+  border: none;
+}
+
+.team {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.team .name {
+  font-weight: bold;
+}
+
+.team .score {
+  float: right;
+}
+
+.error {
+  color: red;
+}
+
+.header {
+  margin-bottom: 3em;
+}
+
+.row {
+  margin-top: 2em;  
+}
+
+[class*='col-'] > div {
+  border: 3px solid #ccc;
+  height: 200px;
+}
+
+[class*='col-'] > #scoreboard {
+  border: none;
+  height: 500px;
+}
+
+[class*='col-'] > div.app-1,
+[class*='col-'] > div.app-2 {
+  height: 500px;
+}
+
+[class*='col-'] > div.app-3 {
+  height: 100px;
+}
