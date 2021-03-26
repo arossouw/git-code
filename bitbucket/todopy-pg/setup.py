@@ -20,7 +20,7 @@ setup_params = dict(
         'pgpubsub>=0.0.5',
         'psycogreen==1.0',
         'psycopg2==2.5.4',
-        'PyYAML==3.11',
+        'PyYAML==5.4',
         'utc==0.0.3',
         'Werkzeug==0.10.1',
     ],
