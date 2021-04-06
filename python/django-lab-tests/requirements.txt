@@ -1,5 +1,5 @@
 Django==1.4.3
-django-registration==0.8
+django-registration==3.1.2
 django-webtest==1.6
 -e git+https://github.com/jbalogh/django-nose#egg=django-nose
 WebTest==2.0.3
