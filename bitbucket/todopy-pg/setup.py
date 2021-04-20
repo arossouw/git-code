@@ -22,7 +22,7 @@ setup_params = dict(
         'psycopg2==2.5.4',
         'PyYAML==3.11',
         'utc==0.0.3',
-        'Werkzeug==0.10.1',
+        'Werkzeug==0.15.3',
     ],
     entry_points={
         'console_scripts': [
